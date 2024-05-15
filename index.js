@@ -1,4 +1,4 @@
-const express = require("express");
+const express = require("express")
 const cors = require("cors");
 const { MongoClient, ServerApiVersion } = require('mongodb');
 const app = express()
@@ -28,7 +28,18 @@ async function run() {
     await client.connect();
     
     app.get("/blogs", async(req, res)=>{
-      const result = await BlogsCollection.find().toArray();
+      let query = {}
+      if (req.query?.Category) {
+        query = {Category :req.query.Category }
+        
+      }
+      if (req.query?.search) {
+       
+        query = {title: {$regex:req.query.search , $options: 'i'}}
+        
+      }
+
+      const result = await BlogsCollection.find(query).toArray();
       res.send(result)
     });
 
