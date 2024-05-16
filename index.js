@@ -1,6 +1,6 @@
 const express = require("express")
 const cors = require("cors");
-const { MongoClient, ServerApiVersion } = require('mongodb');
+const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
 const app = express()
 require('dotenv').config()
 const port = process.env.PORT || 5000;
@@ -25,8 +25,28 @@ const client = new MongoClient(uri, {
 async function run() {
   try {
     const BlogsCollection = client.db("BlogsDB").collection("blogs")
-    await client.connect();
+    const commentCollection = client.db("BlogsDB").collection("comments")
+    const wishListCollection = client.db("BlogsDB").collection("wishList")
     
+    await client.connect();
+   app.get("/comment", async(req , res)=>{
+    const id = req.query.id
+    const query = {blogId : id}
+    const result = await commentCollection.find(query ).toArray()
+    res.send(result)
+   }) 
+
+
+
+
+
+    app.get("/details", async(req , res)=>{
+      const id = req.query.id;
+      const query = {_id : new ObjectId(id)} 
+      const result = await BlogsCollection.findOne(query)
+      res.send(result)
+    
+    })
     app.get("/blogs", async(req, res)=>{
       let query = {}
       if (req.query?.Category) {
@@ -45,6 +65,14 @@ async function run() {
 
    app.post("/blogs", async (req , res)=>{
     const result = await BlogsCollection.insertOne(req.body);
+    res.send(result)
+   })
+   app.post("/comment", async (req , res)=>{
+    const result = await commentCollection.insertOne(req.body);
+    res.send(result)
+   })
+   app.post("/wishList", async (req , res)=>{
+    const result = await wishListCollection.insertOne(req.body);
     res.send(result)
    })
     await client.db("admin").command({ ping: 1 });
