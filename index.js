@@ -37,13 +37,45 @@ async function run() {
    }) 
 
 
+   app.get("/wishList", async(req , res)=>{
+    const email = req.query.email;
+    const query = {UserEmail : email} 
+    const result = await wishListCollection.find(query).toArray();
+    res.send(result)
+  
+  })
 
+  app.put("/details", async(req , res)=>{
+    const id =req.query.id
+    const user = req.body
+    const query = {_id : new ObjectId(id)} 
+    const option = {upsert : true}
+    const updateUser ={
+      $set :{
+        title : user.title, 
+        Category :user.Category,  
+        URL :user.URL, 
+        shortDes :user.shortDes, 
+        description :user.description, 
+        Description :user.Description, 
+      }
+    }
+    const result = await BlogsCollection.updateOne(query,updateUser, option)
+    res.send(result)
+  });
 
-
+    
     app.get("/details", async(req , res)=>{
       const id = req.query.id;
       const query = {_id : new ObjectId(id)} 
       const result = await BlogsCollection.findOne(query)
+      res.send(result)
+
+    })
+    app.delete("/wishList", async(req , res)=>{
+      const id = req.query.id;
+      const query = {_id : new ObjectId(id)} 
+      const result = await wishListCollection.deleteOne(query)
       res.send(result)
     
     })
