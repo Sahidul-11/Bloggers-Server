@@ -6,8 +6,6 @@ const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
 const app = express()
 require('dotenv').config()
 const port = process.env.PORT || 5000;
-
-
 // MIDDLE WIRE
 app.use(
   cors({
@@ -168,7 +166,6 @@ async function run() {
   // await client.db("admin").command({ ping: 1 });
   console.log("Pinged your deployment. You successfully connected to MongoDB!");
 } finally {
-  // Ensures that the client will close when you finish/error
   // await client.close();
 }
 }
