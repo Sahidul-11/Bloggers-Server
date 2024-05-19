@@ -12,9 +12,9 @@ const port = process.env.PORT || 5000;
 app.use(
   cors({
     origin: [
-      "http://localhost:5173",
-      "https://cardoctor-bd.web.app",
-      "https://cardoctor-bd.firebaseapp.com",
+      // "http://localhost:5173",
+      "https://bolgs-website.web.app",
+      "https://bolgs-website.firebaseapp.com",
     ],
     credentials: true,
   })
@@ -137,7 +137,7 @@ async function run() {
     res.send(result)
 
   })
-  app.get("/blogs", verifyToken, async (req, res) => {
+  app.get("/blogs", async (req, res) => {
     let query = {}
     if (req.query?.Category) {
       query = { Category: req.query.Category }
@@ -165,7 +165,7 @@ async function run() {
     const result = await wishListCollection.insertOne(req.body);
     res.send(result)
   })
-  await client.db("admin").command({ ping: 1 });
+  // await client.db("admin").command({ ping: 1 });
   console.log("Pinged your deployment. You successfully connected to MongoDB!");
 } finally {
   // Ensures that the client will close when you finish/error
